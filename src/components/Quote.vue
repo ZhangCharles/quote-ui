@@ -7,6 +7,7 @@ const store = msgStore()
 const json = store.json
 
 const nameColor = ref('#FFA357')
+const dialog = ref(false)
 
 watch(json.messages[0].from, (newID) => {
   const id = Number(newID.id)
@@ -29,6 +30,10 @@ if (json.messages[0].from.id) nameIndex.value = Math.abs(Number(json.messages[0]
 function addText() {
   json.messages.push({
       entities: [],
+      media: {
+          url: ""
+        },
+      mediaType: "",
       avatar: false,
       from: {
         id: "",
@@ -52,22 +57,39 @@ function delText() {
       <v-form @submit.prevent>
         <v-row dense>
           <v-col cols="6">
-            <v-text-field v-model="json.messages[0].from.name" label="User Name"></v-text-field>
-            <v-text-field v-model="json.messages[0].from.id" label="ID">
+            <v-text-field v-model="json.messages[0].from.name" label="User Name" variant="solo"></v-text-field>
+            <v-text-field v-model="json.messages[0].from.id" label="ID" variant="solo">
               <template v-slot:append>
                 <v-avatar :color="nameColor"></v-avatar>
               </template>
             </v-text-field>
-            <v-text-field v-model="json.messages[0].from.photo.url" label="Avatar">
+            <v-text-field v-model="json.messages[0].from.photo.url" label="Avatar" variant="solo">
               <template v-slot:append>
                 <v-avatar>
                   <v-img :src="json.messages[0].from.photo.url"></v-img>
                 </v-avatar>
               </template>
             </v-text-field>
-            <div v-for="(item, index) in json.messages" :key="index">
-              <v-text-field v-model="item.text" label="Text"></v-text-field>
-            </div>
+            <template v-if="json.messages">
+              <v-dialog v-for="(item, index) in json.messages" :key="index" width="600">
+                <template v-slot:activator="{ props }">
+                  <v-textarea v-model="item.text" label="Text" variant="solo" auto-grow rows="1" clearable>
+                    <template v-slot:append>
+                      <v-btn v-bind="props" icon="mdi-image-plus" density="comfortable"></v-btn>
+                    </template>
+                  </v-textarea>
+                </template>
+                <v-card>
+                  <v-card-title>
+                    Media
+                  </v-card-title>
+                  <v-card-text>
+                    <v-text-field v-model="item.media.url" label="URL" variant="underlined" clearable></v-text-field>
+                    <v-checkbox v-model="item.mediaType" value="sticker" label="Sticker"></v-checkbox>
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
+            </template>
             <v-row align="center" justify="space-between">
               <v-col cols="auto">
                 <v-btn type="submit" @click="addText">Add Text</v-btn>

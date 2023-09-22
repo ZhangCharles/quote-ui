@@ -9,5 +9,5 @@ A UI for [quote-api](https://github.com/LyoSU/quote-api)
 - [x] User Name
 - [x] Avatar
 - [x] ID
-- [ ] Entity
-- [ ] Media
+- [x] Markdown
+- [x] Media

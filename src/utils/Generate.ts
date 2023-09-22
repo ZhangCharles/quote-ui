@@ -12,6 +12,8 @@ async function generate(json:any, entities: any) {
       messages: [
         {
         entities: [],
+        media: undefined,
+        mediaType: undefined,
         avatar: true,
         from: {},
         text: "",
@@ -23,6 +25,8 @@ async function generate(json:any, entities: any) {
     if (i >= 1) {
       submit.messages.push({
         entities: [],
+        media: undefined,
+        mediaType: undefined,
         avatar: true,
         from: {},
         text: "",
@@ -34,6 +38,16 @@ async function generate(json:any, entities: any) {
     submit.messages[i].from = json.messages[i].from
     submit.messages[i].avatar = json.messages[i].avatar
     submit.messages[i].replyMessage = json.messages[i].replyMessage
+    
+    if (json.messages[i].media.url === "") {
+      delete submit.messages[i].media
+      delete submit.messages[i].mediaType
+    } else {
+      submit.messages[i].media = json.messages[i].media
+      if (json.messages[i].mediaType === "sticker") {
+        submit.messages[i].mediaType = json.messages[i].mediaType
+      }
+    }
   }
   console.log(submit)
   var result
